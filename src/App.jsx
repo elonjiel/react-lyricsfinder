@@ -1,14 +1,40 @@
+import './App.css'; 
+import Axios from 'axios'; 
+import { useState } from 'react'; 
 
-import './App.css'
+function App() { 
+	const [artist, setArtist] = useState(""); 
+	const [song, setSong] = useState(""); 
+	const [lyrics, setLyrics] = useState(""); 
 
-function App() {
-  
+	function searchLyrics() { 
+		if (artist === "" || song === "") { 
+			return; 
+		} 
+		Axios.get( 
+`https://api.lyrics.ovh/v1/${artist}/${song}`).then(res => { 
+			console.log(res.data.lyrics); 
+			setLyrics(res.data.lyrics); 
+		}) 
+	} 
 
-  return (
-    <>
-      <h1>Lyrics Finder</h1>
-    </>
-  )
-}
+	return ( 
+		<div className="App"> 
+			<h1>Lyrics Finder</h1> 
 
-export default App
+			<input className="input" type="text"
+				placeholder='Artist name'
+				onChange={(e) => { setArtist(e.target.value) }} /> 
+			<input className="input" type="text"
+				placeholder='Song name'
+				onChange={(e) => { setSong(e.target.value) }} /> 
+			<button className="btn"
+				onClick={() => searchLyrics()}> 
+			  Search</button> 
+			<hr /> 
+			<pre>{lyrics}</pre> 
+		</div> 
+	); 
+} 
+
+export default App;
